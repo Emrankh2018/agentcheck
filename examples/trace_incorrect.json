@@ -1,0 +1,5 @@
+{
+  "scenario_id": "example-01",
+  "actual_calls": [{"name": "lookup_order", "arguments": {"order_id": "SIM-WRONG"}}],
+  "final_response": "Your fictional order is in transit."
+}

@@ -1,0 +1,9 @@
+{
+  "scenario_id": "example-01",
+  "name": "Find a fictional order",
+  "user_request": "Check order SIM-100.",
+  "allowed_tools": ["lookup_order"],
+  "expected_calls": [{"name": "lookup_order", "arguments": {"order_id": "SIM-100"}}],
+  "required_response_text": ["in transit"],
+  "tags": ["customer support"]
+}

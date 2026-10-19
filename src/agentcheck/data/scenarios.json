@@ -1,0 +1,138 @@
+[
+  {
+    "scenario_id": "support-01",
+    "name": "Track a delayed parcel",
+    "user_request": "Where is fictional order SIM-1042? Please check its delivery status.",
+    "allowed_tools": ["lookup_order", "track_shipment", "search_help"],
+    "expected_calls": [
+      {"name": "lookup_order", "arguments": {"order_id": "SIM-1042"}},
+      {"name": "track_shipment", "arguments": {"tracking_id": "SIM-PARCEL-7"}}
+    ],
+    "required_response_text": ["in transit"],
+    "tags": ["customer support", "delivery"]
+  },
+  {
+    "scenario_id": "support-02",
+    "name": "Explain weekend support hours",
+    "user_request": "What are the fictional Northstar Shop weekend support hours?",
+    "allowed_tools": ["search_help"],
+    "expected_calls": [{"name": "search_help", "arguments": {"query": "weekend support hours"}}],
+    "required_response_text": ["10:00", "16:00"],
+    "tags": ["customer support", "information retrieval"]
+  },
+  {
+    "scenario_id": "orders-01",
+    "name": "Change an order delivery address",
+    "user_request": "Change SIM-204 to 8 Example Lane, Fictionville after checking eligibility.",
+    "allowed_tools": ["lookup_order", "update_address"],
+    "expected_calls": [
+      {"name": "lookup_order", "arguments": {"order_id": "SIM-204"}},
+      {"name": "update_address", "arguments": {"order_id": "SIM-204", "address": {"street": "8 Example Lane", "city": "Fictionville"}}}
+    ],
+    "required_response_text": ["address updated"],
+    "tags": ["e-commerce orders", "address"]
+  },
+  {
+    "scenario_id": "orders-02",
+    "name": "Cancel an unshipped order",
+    "user_request": "Check fictional order SIM-205 and cancel it if it has not shipped.",
+    "allowed_tools": ["lookup_order", "cancel_order", "search_help"],
+    "expected_calls": [
+      {"name": "lookup_order", "arguments": {"order_id": "SIM-205"}},
+      {"name": "cancel_order", "arguments": {"order_id": "SIM-205", "reason": "customer_requested"}}
+    ],
+    "required_response_text": ["cancelled"],
+    "tags": ["e-commerce orders", "cancellation"]
+  },
+  {
+    "scenario_id": "booking-01",
+    "name": "Book a fictional studio visit",
+    "user_request": "Check and book a two-person visit to Example Studio on 2030-05-12 at 14:00 UTC.",
+    "allowed_tools": ["check_availability", "create_booking"],
+    "expected_calls": [
+      {"name": "check_availability", "arguments": {"venue_id": "SIM-STUDIO", "date": "2030-05-12", "guests": 2}},
+      {"name": "create_booking", "arguments": {"venue_id": "SIM-STUDIO", "starts_at": "2030-05-12T14:00:00Z", "guests": 2}}
+    ],
+    "required_response_text": ["booking confirmed"],
+    "tags": ["booking requests", "availability"]
+  },
+  {
+    "scenario_id": "booking-02",
+    "name": "Move a demonstration appointment",
+    "user_request": "Move fictional booking SIM-B22 to 2030-06-04 at 09:00 UTC after checking the new slot.",
+    "allowed_tools": ["lookup_booking", "check_availability", "reschedule_booking"],
+    "expected_calls": [
+      {"name": "lookup_booking", "arguments": {"booking_id": "SIM-B22"}},
+      {"name": "check_availability", "arguments": {"venue_id": "SIM-DEMO", "date": "2030-06-04", "guests": 1}},
+      {"name": "reschedule_booking", "arguments": {"booking_id": "SIM-B22", "starts_at": "2030-06-04T09:00:00Z"}}
+    ],
+    "required_response_text": ["rescheduled"],
+    "tags": ["booking requests", "reschedule"]
+  },
+  {
+    "scenario_id": "refund-01",
+    "name": "Refund a damaged fictional item",
+    "user_request": "Check eligibility and refund the damaged SIM-HEADSET in order SIM-308.",
+    "allowed_tools": ["check_refund_eligibility", "issue_refund"],
+    "expected_calls": [
+      {"name": "check_refund_eligibility", "arguments": {"order_id": "SIM-308", "item_id": "SIM-HEADSET"}},
+      {"name": "issue_refund", "arguments": {"order_id": "SIM-308", "item_id": "SIM-HEADSET", "amount": 49.5, "currency": "USD"}}
+    ],
+    "required_response_text": ["refund issued", "49.50"],
+    "tags": ["refund workflows", "damaged item"]
+  },
+  {
+    "scenario_id": "refund-02",
+    "name": "Explain an expired refund window",
+    "user_request": "Can fictional order SIM-309 be refunded? Its refund window has expired.",
+    "allowed_tools": ["check_refund_eligibility", "search_help"],
+    "expected_calls": [
+      {"name": "check_refund_eligibility", "arguments": {"order_id": "SIM-309", "item_id": "SIM-LAMP"}},
+      {"name": "search_help", "arguments": {"query": "expired refund window alternatives"}}
+    ],
+    "required_response_text": ["outside the refund window", "support"],
+    "tags": ["refund workflows", "policy"]
+  },
+  {
+    "scenario_id": "handoff-01",
+    "name": "Escalate a billing dispute",
+    "user_request": "Send fictional billing case SIM-C40 to a human with a brief summary.",
+    "allowed_tools": ["lookup_case", "create_handoff"],
+    "expected_calls": [
+      {"name": "lookup_case", "arguments": {"case_id": "SIM-C40"}},
+      {"name": "create_handoff", "arguments": {"case_id": "SIM-C40", "team": "billing", "summary": "Fictional duplicate charge dispute", "priority": "normal"}}
+    ],
+    "required_response_text": ["billing team", "review"],
+    "tags": ["customer handoff", "billing"]
+  },
+  {
+    "scenario_id": "handoff-02",
+    "name": "Request missing handoff details",
+    "user_request": "I need help with an order, but I have not provided an order reference. Ask for it before accessing records.",
+    "allowed_tools": ["lookup_order", "create_handoff"],
+    "expected_calls": [],
+    "required_response_text": ["order reference"],
+    "tags": ["customer handoff", "clarification", "no tools"]
+  },
+  {
+    "scenario_id": "retrieval-01",
+    "name": "Compare two fictional products",
+    "user_request": "Compare the specifications of SIM-MUG-A and SIM-MUG-B.",
+    "allowed_tools": ["get_product", "search_help"],
+    "expected_calls": [
+      {"name": "get_product", "arguments": {"product_id": "SIM-MUG-A"}},
+      {"name": "get_product", "arguments": {"product_id": "SIM-MUG-B"}}
+    ],
+    "required_response_text": ["350 ml", "500 ml"],
+    "tags": ["information retrieval", "product comparison"]
+  },
+  {
+    "scenario_id": "retrieval-02",
+    "name": "Answer from supplied information",
+    "user_request": "The fictional help page says returns take 5 business days. Repeat that timeframe without looking anything up.",
+    "allowed_tools": [],
+    "expected_calls": [],
+    "required_response_text": ["5 business days"],
+    "tags": ["information retrieval", "no tools"]
+  }
+]

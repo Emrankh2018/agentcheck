@@ -1,0 +1,6 @@
+include app.py
+include LICENSE README.md PLAN.md PROGRESS.md DECISIONS.md VERIFICATION.md
+recursive-include .streamlit *.toml
+recursive-include examples *.json
+recursive-include tests *.py
+recursive-include docs *.jpg
